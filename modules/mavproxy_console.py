@@ -237,7 +237,7 @@ class ConsoleModule(mp_module.MPModule):
                 gps_heading = int(self.mpstate.status.msgs['GPS_RAW_INT'].cog * 0.01)
             else:
                 gps_heading = self.mpstate.status.msgs['GPS_RAW'].hdg
-            self.console.set_status('Heading', 'Hdg %s/%u' % (master.field('VFR_HUD', 'heading', '-'), gps_heading))
+            self.console.set_status('Heading', 'Head %s/%u' % (master.field('VFR_HUD', 'heading', '-'), gps_heading))
         elif type == 'VFR_HUD':
             if master.mavlink10():
                 alt = master.field('GPS_RAW_INT', 'alt', 0) / 1.0e3
@@ -400,11 +400,11 @@ class ConsoleModule(mp_module.MPModule):
             self.console.set_status('ARM', armstring, fg=arm_colour)
             if self.max_link_num != len(self.mpstate.mav_master):
                 for i in range(self.max_link_num):
-                    self.console.set_status('Link%u'%(i+1), '', row=1)
+                    self.console.set_status('Status : ', '', row=1)
                 self.max_link_num = len(self.mpstate.mav_master)
             for m in self.mpstate.mav_master:
                 linkdelay = (self.mpstate.status.highest_msec - m.highest_msec)*1.0e-3
-                linkline = "Link %s " % (self.link_label(m))
+                linkline = "Its On ! " #% (self.link_label(m))
                 fg = 'dark green'
                 if m.linkerror:
                     linkline += "down"
@@ -414,9 +414,8 @@ class ConsoleModule(mp_module.MPModule):
                     if (m.mav_count+m.mav_loss) != 0: #avoid divide-by-zero
                         packets_rcvd_percentage = (100.0 * m.mav_count) / (m.mav_count + m.mav_loss)
 
-                    linkbits = ["%u pkts" % m.mav_count,
-                                "%u lost" % m.mav_loss,
-                                "%.2fs delay" % linkdelay,
+
+                    linkbits = ["Ayy",
                     ]
                     try:
                         if m.mav.signing.sig_count:
